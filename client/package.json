@@ -4,6 +4,7 @@
   "description": "A web UI for trading API from Alura's Advanced Javascript course.",
   "main": "./js/dist/boot.js",
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "systemjs": "0.19.31"
   },
   "devDependencies": {

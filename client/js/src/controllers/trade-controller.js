@@ -15,6 +15,8 @@ import { ConnectionFactory } from './../services/connection-factory'
 
 import { TradeDao } from './../dao/trade-dao'
 
+import { TradeRepository } from './../repository/trade-repository'
+
 /**
  * Class controller to perform trading operations.
  */
@@ -46,6 +48,14 @@ class TradeController {
       'text'
     )
 
+    this._repository = null
+    ConnectionFactory.getConnection()
+      .then(connection => {
+        this._repository = new TradeRepository(connection)
+      }).catch(err => {
+        this._message = err
+      })
+
     this._init()
   }
 
@@ -70,12 +80,10 @@ class TradeController {
     event.preventDefault()
 
     let trade = this._create()
-    ConnectionFactory.getConnection()
-      .then(connection => new TradeDao(connection))
-      .then(dao => dao.add(trade))
-      .then(() => {
+    this._repository.add(trade)
+      .then(msg => {
         this._collection.add(trade)
-        this._message.text = 'Trade saved with success.'
+        this._message = msg
         this._clean()
       })
       .catch(err => {
